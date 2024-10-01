@@ -1,28 +1,33 @@
-package com.gridnine.Tests;
+package com.gridnine.testing;
 
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import static com.gridnine.Tests.FlightBuilder.createFlights;
-import static com.gridnine.Tests.ListNameFilter.*;
+import static com.gridnine.testing.FlightBuilder.createFlights;
 
 public class Start {
 
-   public HashMap<Enum, List<Flight>> mapStartFilter = new HashMap<>();
+    public HashMap<ListNameFilter, FlightFilter> mapStartFilter = new HashMap<>() {{
+        put(ListNameFilter.FILTER1, new Filter_1());
+        put(ListNameFilter.FILTER2, new Filter_2());
+        put(ListNameFilter.FILTER3, new Filter_3());
+    }};
 
-   public void startFilter(List<Flight> listFlights , ListNameFilter filterEnum){
+    public List<Flight> startFilter(ListNameFilter filterEnum, List<Flight> listFlights) {
+        FlightFilter flightFilter = mapStartFilter.get(filterEnum);
 
-       System.out.println(mapStartFilter.get(filterEnum));
-   }
+        return flightFilter.filter(listFlights);
+    }
 
     public static void main(String[] args) {
         Start s = new Start();
-        s.mapStartFilter.put(FILTER1,new Filter_1().filter(new ArrayList<>()));
-        s.mapStartFilter.put(FILTER2,new Filter_2().filter(new ArrayList<>()));
-        s.mapStartFilter.put(FILTER3,new Filter_3().filter(new ArrayList<>()));
-
-        s.startFilter(createFlights(),FILTER1);
-
+        List<Flight> resultListEditFilter_1 = s.startFilter(ListNameFilter.FILTER1, createFlights());
+       // resultListEditFilter_1.forEach(el -> System.out.println(el));
+        System.out.println();
+        List<Flight> resultListEditFilter_2 = s.startFilter(ListNameFilter.FILTER2, createFlights());
+        //resultListEditFilter_2.forEach(el -> System.out.println(el));
+        System.out.println();
+        List<Flight> resultListEditFilter_3 = s.startFilter(ListNameFilter.FILTER3, createFlights());
+        resultListEditFilter_3.forEach(el -> System.out.println(el));
     }
 }
